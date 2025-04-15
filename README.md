@@ -1,3 +1,7 @@
 # NC News Seeding
 
-- Instructions for this sprint can be found at https://l2c.northcoders.com/courses/be/seeding-nc-news
+how to set up the .env files:
+-Create two .env files for your databases:
+.env.test (for the test database). in this file write 'PGDATABASE = nc_news_test'
+.env.development (for the development database). in this file write 'PGDATABASE = nc_news'
+now it been connected to the databases.
