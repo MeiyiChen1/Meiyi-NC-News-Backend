@@ -113,26 +113,26 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
   //   const formattedComments = commentData.map((comment) => {
   //     const formattedComment = convertTimestampToDate(comment);
 
-        return [
-          articlesRefObject[comment.article_title],
-          formattedComment.body,
-          formattedComment.votes,
-          formattedComment.author,
-          formattedComment.created_at,
-        ];
-      });
-      //use pg format to insert the query
-      const insertCommentsQueryString = format(
-        `INSERT INTO comments
-      (article_id, body, votes, author, created_at)
-      VALUES
-      %L
-      RETURNING *;`,
-        formattedComments
-      );
-      // //return db.query
-      return db.query(insertCommentsQueryString);
-    });
+  //     return [
+  //       articlesRefObject[comment.article_title],
+  //       formattedComment.body,
+  //       formattedComment.votes,
+  //       formattedComment.author,
+  //       formattedComment.created_at,
+  //     ];
+  //   });
+  //   //use pg format to insert the query
+  //   const insertCommentsQueryString = format(
+  //     `INSERT INTO comments
+  //   (article_id, body, votes, author, created_at)
+  //   VALUES
+  //   %L
+  //   RETURNING *;`,
+  //     formattedComments
+  //   );
+  //   // //return db.query
+  //   return db.query(insertCommentsQueryString);
+  // });
 };
 
 module.exports = seed;
