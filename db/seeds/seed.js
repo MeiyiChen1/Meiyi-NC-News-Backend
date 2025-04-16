@@ -106,12 +106,12 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
       // //return db.query
       return db.query(insertArticlesQueryString);
-    })
-    .then((result) => {
-      //array of object transform into nested arrays
-      const articlesRefObject = createRef(result, rows);
-      const formattedComments = commentData.map((comment) => {
-        const formattedComment = convertTimestampToDate(comment);
+    });
+  // .then((result) => {
+  //   //array of object transform into nested arrays
+  //   const articlesRefObject = createRef(result, rows);
+  //   const formattedComments = commentData.map((comment) => {
+  //     const formattedComment = convertTimestampToDate(comment);
 
         return [
           articlesRefObject[comment.article_title],
