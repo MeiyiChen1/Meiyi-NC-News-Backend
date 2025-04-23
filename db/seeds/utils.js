@@ -6,13 +6,14 @@ exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   return { created_at: new Date(created_at), ...otherProperties };
 };
 
-exports.createRef = (articlesData) => {
-  if (articlesData.length === 0) {
+exports.createArticleLookupObj = (articleData) => {
+  if (articleData.length === 0) {
     return {};
   }
-  const result = {};
+  const lookupObj = {};
   articleData.forEach((article) => {
-    result[article.title] = article.article_id;
+    lookupObj[article.title] = article.article_id;
   });
-  return result;
+
+  return lookupObj;
 };

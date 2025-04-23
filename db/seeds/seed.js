@@ -1,6 +1,6 @@
 const db = require("../connection");
 const format = require("pg-format");
-const { convertTimestampToDate, createRef } = require("./utils");
+const { convertTimestampToDate, createArticleLookupObj } = require("./utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -17,21 +17,21 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => {
       return db.query(`CREATE TABLE topics(
             slug VARCHAR(100) PRIMARY KEY,
-            description VARCHAR(100),
+            description VARCHAR(300) NOT NULL,
             img_url VARCHAR(1000));`);
     })
     .then(() => {
       return db.query(`CREATE TABLE users(
-            username VARCHAR(80) PRIMARY KEY,
-            name VARCHAR(80) NOT NULL,
-            avatar_url VARCHAR(1000));`);
+            username VARCHAR(80) PRIMARY KEY NOT NULL UNIQUE,
+            name VARCHAR(100) NOT NULL,
+            avatar_url VARCHAR(1000) NOT NULL);`);
     })
     .then(() => {
       return db.query(`CREATE TABLE articles(
             article_id SERIAL PRIMARY KEY,
             title VARCHAR(100) NOT NULL,
-            topic VARCHAR(1000) REFERENCES topics(slug) NOT NULL,
-            author VARCHAR(100) REFERENCES users(username) NOT NULL,
+            topic VARCHAR(1000) REFERENCES topics(slug),
+            author VARCHAR(100) REFERENCES users(username),
             body TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             votes INT DEFAULT 0,
@@ -42,9 +42,9 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
               comment_id SERIAL PRIMARY KEY,
               article_id INT REFERENCES articles(article_id),
               body TEXT NOT NULL,
-              author VARCHAR(100) REFERENCES users(username),
               votes INT DEFAULT 0,
-              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`);
+              author VARCHAR(100) REFERENCES users(username),
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
     })
     .then(() => {
       //array of object transform into nested arrays
@@ -83,16 +83,16 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => {
       //array of object transform into nested arrays
       const formattedArticles = articleData.map((article) => {
-        const formattedArticle = convertTimestampToDate(article);
+        const convertedArticle = convertTimestampToDate(article);
 
         return [
-          article.title,
-          article.topic,
-          article.author,
-          article.body,
-          formattedArticle.created_at,
-          article.votes,
-          article.article_img_url,
+          convertedArticle.title,
+          convertedArticle.topic,
+          convertedArticle.author,
+          convertedArticle.body,
+          convertedArticle.created_at,
+          convertedArticle.votes,
+          convertedArticle.article_img_url,
         ];
       });
       //use pg format to insert the query
@@ -106,33 +106,32 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
       // //return db.query
       return db.query(insertArticlesQueryString);
+    })
+    .then((result) => {
+      //array of object transform into nested arrays
+      const articlesLookup = createArticleLookupObj(result.rows);
+      const formattedComments = commentData.map((comment) => {
+        const convertedComment = convertTimestampToDate(comment);
+        return [
+          articlesLookup[convertedComment.article_title],
+          convertedComment.body,
+          convertedComment.votes,
+          convertedComment.author,
+          convertedComment.created_at,
+        ];
+      });
+      //use pg format to insert the query
+      const insertCommentsQueryString = format(
+        `INSERT INTO comments
+  (article_id, body, votes, author, created_at)
+  VALUES
+  %L
+  RETURNING *;`,
+        formattedComments
+      );
+      // //return db.query
+      return db.query(insertCommentsQueryString);
     });
-  // .then((result) => {
-  //   //array of object transform into nested arrays
-  //   const articlesRefObject = createRef(result, rows);
-  //   const formattedComments = commentData.map((comment) => {
-  //     const formattedComment = convertTimestampToDate(comment);
-
-  //     return [
-  //       articlesRefObject[comment.article_title],
-  //       formattedComment.body,
-  //       formattedComment.votes,
-  //       formattedComment.author,
-  //       formattedComment.created_at,
-  //     ];
-  //   });
-  //   //use pg format to insert the query
-  //   const insertCommentsQueryString = format(
-  //     `INSERT INTO comments
-  //   (article_id, body, votes, author, created_at)
-  //   VALUES
-  //   %L
-  //   RETURNING *;`,
-  //     formattedComments
-  //   );
-  //   // //return db.query
-  //   return db.query(insertCommentsQueryString);
-  // });
 };
 
 module.exports = seed;
