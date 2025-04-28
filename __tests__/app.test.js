@@ -24,3 +24,28 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe('"GET /api/topics', () => {
+  test("200: response with all topics objects", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.topics).toHaveLength(3);
+        body.topics.forEach((topic) => {
+          expect(topic).toMatchObject({
+            description: expect.any(String),
+            slug: expect.any(String),
+          });
+        });
+      });
+  });
+  test("404: non-existent route", () => {
+    return request(app)
+      .get("/api/topikz")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+});
