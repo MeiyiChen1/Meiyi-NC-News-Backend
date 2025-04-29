@@ -1,4 +1,7 @@
-const selectTopics = require("../models folder/topics.models");
+const {
+  selectTopics,
+  selectArticleById,
+} = require("../models folder/topics.models");
 
 const getTopics = (req, res, next) => {
   selectTopics()
@@ -10,4 +13,14 @@ const getTopics = (req, res, next) => {
     });
 };
 
-module.exports = getTopics;
+const getArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  selectArticleById(article_id)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+module.exports = { getTopics, getArticleById };
