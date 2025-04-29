@@ -49,3 +49,40 @@ describe('"GET /api/topics', () => {
       });
   });
 });
+describe("GET /api/articles/:article_id", () => {
+  test("200: responds with corresponding article for requested id", () => {
+    return request(app)
+      .get("/api/articles/3")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.article_id).toBe(3);
+        expect(body.article.title).toBe(
+          "Eight pug gifs that remind me of mitch"
+        );
+        expect(body.article.topic).toBe("mitch");
+        expect(body.article.author).toBe("icellusedkars");
+        expect(body.article.body).toBe("some gifs");
+        expect(body.article.created_at).toBe("2020-11-03T09:12:00.000Z");
+        expect(body.article.votes).toBe(0);
+        expect(body.article.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+      });
+  });
+  test("404: when pass valid article_id but does not existence", () => {
+    return request(app)
+      .get("/api/articles/1000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No article found under article_id 1000");
+      });
+  });
+  test("400: bad request when pass invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
