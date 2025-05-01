@@ -23,5 +23,17 @@
         }
       ]
     }
+  },
+  "GET/api/articles/:article_id/comments": {
+    "description": "serves all comments from article",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "article_title": "They're not exactly dogs, are they?",
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 16,
+      "author": "butter_bridge",
+      "created_at": "1586179020000",
+      "article_id": 9
+    }
   }
 }

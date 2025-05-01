@@ -93,7 +93,6 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.articles);
         expect(body.articles).toHaveLength(13);
 
         body.articles.forEach((article) => {
@@ -118,6 +117,51 @@ describe("GET /api/articles", () => {
       .then(({ body }) => {
         expect(body.articles.length).toBeGreaterThan(0);
         expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: response with an array of comments for the given article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            votes: expect.any(Number),
+            author: expect.any(String),
+            created_at: expect.any(String),
+          });
+        });
+      });
+  });
+  test("200: if sort_by query is created_at and is sort by date descending", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBeGreaterThan(0);
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("404: when pass valid article_id but does not existence", () => {
+    return request(app)
+      .get("/api/articles/1999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No article found under article_id 1999");
+      });
+  });
+  test("400: bad request when pass invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/not-a-num/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });
