@@ -8,7 +8,8 @@ if (!process.env.PGDATABASE && !process.env.DATABASE_URL) {
   throw new Error("No PGDATABASE or DATABASE_URL configured");
 } else {
   console.log(
-    `Connected to ${process.env.PGDATABASE || process.env.DATABASE_URL}`
+    `Connected to ${process.env.PGDATABASE}` ||
+      "connected to production database"
   );
 }
 
