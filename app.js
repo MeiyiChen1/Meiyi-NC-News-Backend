@@ -5,6 +5,7 @@ const getApi = require("./controllers folder/api.controllers");
 const {
   getTopics,
   getArticleById,
+  getArticles,
 } = require("./controllers folder/topics.controllers");
 
 app.get("/api", getApi);
@@ -12,6 +13,8 @@ app.get("/api", getApi);
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles", getArticles);
 
 app.all("/*splat", (req, res, next) => {
   next({ status: 404, msg: "Not found" });
