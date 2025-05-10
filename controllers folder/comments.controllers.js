@@ -1,4 +1,7 @@
-const selectCommentsByArticleId = require("../models folder/comments.models");
+const {
+  selectCommentsByArticleId,
+  insertComment,
+} = require("../models folder/comments.models");
 
 const getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
@@ -11,4 +14,21 @@ const getCommentsByArticleId = (req, res, next) => {
     });
 };
 
-module.exports = getCommentsByArticleId;
+const postComment = (req, res, next) => {
+  const { article_id } = req.params;
+  const { username, body } = req.body;
+  if (!username || !body) {
+    return res.status(400).send({
+      msg: "Missing request information",
+    });
+  }
+  insertComment(article_id, username, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getCommentsByArticleId, postComment };

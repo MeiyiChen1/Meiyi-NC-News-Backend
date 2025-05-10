@@ -165,3 +165,58 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments ", () => {
+  test("201: should create a new comment", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "a new comment" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          comment_id: expect.any(Number),
+          article_id: 1,
+          username: "butter_bridge",
+          body: "a new comment",
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("400: if missing username", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ body: "a new comment" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing request information");
+      });
+  });
+  test("400:if missing body", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing request information");
+      });
+  });
+  test("404: if article does not exist", () => {
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send({ username: "butter_bridge", body: "new comment" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("404: if username does not exist", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "wrong_user", body: "new comment" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+});
