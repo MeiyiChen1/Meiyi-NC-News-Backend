@@ -8,7 +8,10 @@ const {
   getArticles,
 } = require("./controllers folder/articles.controllers");
 
-const getCommentsByArticleId = require("./controllers folder/comments.controllers");
+const {
+  getCommentsByArticleId,
+  postComment,
+} = require("./controllers folder/comments.controllers");
 
 app.get("/api", getApi);
 
@@ -19,6 +22,10 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.use(express.json());
+
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.all("/*splat", (req, res, next) => {
   next({ status: 404, msg: "Not found" });

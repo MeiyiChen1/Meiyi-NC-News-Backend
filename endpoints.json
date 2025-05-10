@@ -35,5 +35,17 @@
       "created_at": "1586179020000",
       "article_id": 9
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "post comment to the article",
+    "queries": [],
+    "exampleResponse": {
+      "comment_id": 18,
+      "article_id": 3,
+      "author": "butter_bridge",
+      "body": "This article changed my perspective entirely!",
+      "votes": 0,
+      "created_at": "2020-11-15T08:30:45.123Z"
+    }
   }
 }
