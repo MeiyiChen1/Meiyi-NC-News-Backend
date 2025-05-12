@@ -6,6 +6,7 @@ const { getTopics } = require("./controllers folder/topics.controllers");
 const {
   getArticleById,
   getArticles,
+  patchArticleVotes,
 } = require("./controllers folder/articles.controllers");
 
 const {
@@ -26,6 +27,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.use(express.json());
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", patchArticleVotes);
 
 app.all("/*splat", (req, res, next) => {
   next({ status: 404, msg: "Not found" });

@@ -220,3 +220,63 @@ describe("POST /api/articles/:article_id/comments ", () => {
       });
   });
 });
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: update an article and responds with the updated article", () => {
+    return request(app)
+      .patch("/api/articles/3")
+      .send({ inc_votes: 17 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.updatedArticle).toMatchObject({
+          article_id: 3,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 17,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("400: returns bad request when article_id is invalid", () => {
+    return request(app)
+      .patch("/api/articles/banana")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid article ID");
+      });
+  });
+  test("400: returns bad request when inc_votes is invalid data type", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "not-number" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Invalid request when requires { inc_votes: number }"
+        );
+      });
+  });
+  test("400: returns bad request when passed an empty object", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Invalid request when requires { inc_votes: number }"
+        );
+      });
+  });
+  test("404: returns not found when pass non existence article_id", () => {
+    return request(app)
+      .patch("/api/articles/9999")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+});
