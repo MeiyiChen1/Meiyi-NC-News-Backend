@@ -47,5 +47,18 @@
       "votes": 0,
       "created_at": "2020-11-15T08:30:45.123Z"
     }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates the vote count of an article by the specified amount",
+    "queries": ["article_id"],
+    "required": ["inc_votes: 1"],
+    "exampleResponse": {
+      "article_title": "They're not exactly dogs, are they?",
+      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      "votes": 17,
+      "author": "butter_bridge",
+      "created_at": "1586179020000",
+      "article_id": 9
+    }
   }
 }
