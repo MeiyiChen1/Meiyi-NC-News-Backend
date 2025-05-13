@@ -1,6 +1,7 @@
 const {
   selectCommentsByArticleId,
   insertComment,
+  deleteComment,
 } = require("../models folder/comments.models");
 
 const getCommentsByArticleId = (req, res, next) => {
@@ -31,4 +32,27 @@ const postComment = (req, res, next) => {
     });
 };
 
-module.exports = { getCommentsByArticleId, postComment };
+const handleDeleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  if (isNaN(Number(comment_id)) || Number(comment_id) <= 0) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid comment ID format",
+    });
+  }
+  deleteComment(comment_id)
+    .then((comment) => {
+      if (!comment) {
+        return Promise.reject({
+          status: 404,
+          msg: "Comment not found",
+        });
+      }
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getCommentsByArticleId, postComment, handleDeleteComment };

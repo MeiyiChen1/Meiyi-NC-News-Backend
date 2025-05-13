@@ -60,5 +60,13 @@
       "created_at": "1586179020000",
       "article_id": 9
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a comment with the request comment_id",
+    "queries": ["comment_id = 18"],
+    "exampleResponse": {
+      "status": 204,
+      "body": ""
+    }
   }
 }

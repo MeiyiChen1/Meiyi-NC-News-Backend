@@ -25,7 +25,7 @@ describe("GET /api", () => {
   });
 });
 
-describe('"GET /api/topics', () => {
+describe("GET /api/topics", () => {
   test("200: response with all topics objects", () => {
     return request(app)
       .get("/api/topics")
@@ -277,6 +277,44 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Article not found");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204:delete the comment by comment_id", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return db.query("SELECT * FROM comments WHERE comment_id = $1", [1]);
+      })
+      .then(({ rows }) => {
+        expect(rows.length).toBe(0);
+      });
+  });
+  test("400:invalid comment_id when request with non-number", () => {
+    return request(app)
+      .delete("/api/comments/abanana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid comment ID format");
+      });
+  });
+  test("400:invalid comment_id when request with negative number", () => {
+    return request(app)
+      .delete("/api/comments/-1")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid comment ID format");
+      });
+  });
+  test("404: non existent comment", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
       });
   });
 });
