@@ -14,6 +14,8 @@ const {
   postComment,
 } = require("./controllers folder/comments.controllers");
 
+const { getUsers } = require("./controllers folder/users.controllers");
+
 app.get("/api", getApi);
 
 app.get("/api/topics", getTopics);
@@ -23,6 +25,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.get("/api/users", getUsers);
 
 app.use(express.json());
 
