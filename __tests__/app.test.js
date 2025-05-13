@@ -119,6 +119,14 @@ describe("GET /api/articles", () => {
         expect(body.articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test("404:non-existent route", () => {
+    return request(app)
+      .get("/api/aeticales")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
