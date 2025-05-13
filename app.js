@@ -12,6 +12,7 @@ const {
 const {
   getCommentsByArticleId,
   postComment,
+  handleDeleteComment,
 } = require("./controllers folder/comments.controllers");
 
 const { getUsers } = require("./controllers folder/users.controllers");
@@ -33,6 +34,8 @@ app.use(express.json());
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
+
+app.delete("/api/comments/:comment_id", handleDeleteComment);
 
 app.all("/*splat", (req, res, next) => {
   next({ status: 404, msg: "Not found" });
