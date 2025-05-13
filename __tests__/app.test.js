@@ -166,6 +166,31 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("GET /api/users", () => {
+  test("200: response with all user objects with correct properties ", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toHaveLength(4);
+        body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+  test("404: non existence route", () => {
+    return request(app)
+      .get("/api/userrz")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+});
 describe("POST /api/articles/:article_id/comments ", () => {
   test("201: should create a new comment", () => {
     return request(app)
