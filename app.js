@@ -16,6 +16,9 @@ const {
 } = require("./controllers folder/comments.controllers");
 
 const { getUsers } = require("./controllers folder/users.controllers");
+const cors = require("cors");
+
+app.use(cors());
 
 app.get("/api", getApi);
 
