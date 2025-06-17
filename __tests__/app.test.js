@@ -351,3 +351,38 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("GET /api/articles (sorting_queries)", () => {
+  test("200: sort articles by default created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=desc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("200: sort articles by votes in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("votes", { ascending: true });
+      });
+  });
+  test("400: invalid sort_by column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=flowers_num")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sorting column");
+      });
+  });
+  test("400: invalid order", () => {
+    return request(app)
+      .get("/api/articles?order=top")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order query");
+      });
+  });
+});
