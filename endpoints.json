@@ -68,5 +68,12 @@
       "status": 204,
       "body": ""
     }
+  },
+  "GET /api/comments/:comment_id": {
+    "description": "return a array of articles sorted by default or requested column, order in ascending or descending order",
+    "queries": {
+      "sort_by": "Sorts by a valid column (e.g., created_at, title, votes). Defaults to 'created_at'.",
+      "order": "Sort direction: 'asc' or 'desc'. Defaults to 'desc'."
+    }
   }
 }
