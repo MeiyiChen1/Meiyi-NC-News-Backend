@@ -23,6 +23,19 @@
 
 - Happy path + error case testing
 
+✔ Built 10+ RESTful endpoints (GET/POST/PATCH/DELETE) for articles, comments, and user data
+
+✔ Rigorous testing suite covering happy paths (200/201/204 statuses) and error handling (400/404/500 responses) using Jest, ensuring robustness
+
+✔ Validated edge cases (e.g. invalid article IDs, missing request bodies) to prevent runtime failures. Followed TDD principles for critical features (e.g. comment deletion) to minimise bugs
+
+✔ Hosted database on Supabase and deployed API on Render, ensuring remote accessibility for frontend integration
+
+✔ Debugged complex async middleware and SQL queries, improving error-handling reliability
+
+✔ Followed MVC architecture for scalable code organisation
+
+
 ### **Tech Stack**
 
 **Backend**: React | Axios | React Router | Context API (state) | CSS3
